@@ -2,6 +2,12 @@
 # defining the database
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, TextAreaField, SelectMultipleField
+from wtforms.validators import DataRequired, EqualTo, Length
+from flask_ckeditor import CKEditorField
+
+
 
 db = SQLAlchemy()
 
@@ -77,13 +83,21 @@ class Post(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),nullable=False)
     # email = db.Column(db.String, db.ForeignKey('users.email'), unique=True)
-
     
     skills = db.relationship("Skill", secondary="post_skills", back_populates="posts")  
     user = db.relationship("User", back_populates="posts", foreign_keys=[user_id])
 
     def __repr__(self):
         return f'<Post post_id={self.post_id} title={self.title} post_date={self.post_date} \n description={self.description}>'
+
+
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    description = CKEditorField('Content', Validators=[DataRequired()])
+    skills = SelectMultipleField("Related Skills", choices=['Customer Service','Sales','Accounting','Businesses Development','Marketing', 'Leadership','Communication', 'Agile Project Management','Web Development','Digital Marketing','Cybersecurity', 'Innovation Management','Digital Marketing','Engineering','SQL'])
+    submit = SubmitField("Submit")
+
+
 
 
 class PostSkill(db.Model):
