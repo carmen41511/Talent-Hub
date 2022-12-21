@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form action="/signup" method="POST">
+    
+    <h1>Create an Account</h1>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="text" name="email" required>
+    </div>
+
+    <br><br>
+
+    <div>
+        <label for="username">Create a Username:</label>
+        <input type="text" name="username" required>
+    </div>
+
+    <br><br>
+    
+    <div>
+        <label for="password">Choose a Password:</label>
+        <input type="password" name="password" required>
+    </div>
+
+    <br>
+
+    <div>
+        <p><label for="interest">What's Your Interest?</label></p>
+        <textarea name="interest" rows="5" cols="50" placeholder="A place to make yourself shine and look for like-minded peers" required></textarea>
+    </div>
+
+    <br>
+
+    <div>
+        <p><label for="bio">Bio</label></p>
+        <textarea name="bio" rows="5" cols="50" placeholder="Write something about yourself. What are you looking for? Why are you here?" required></textarea>
+    </div>
+
+    <br><br>
+
+
+
+    <button type="submit">Sign Up</button>
+
+</form>
+
+
+
+{% endblock %}

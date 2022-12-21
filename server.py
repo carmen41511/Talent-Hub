@@ -1,6 +1,8 @@
 from flask import (Flask, render_template, request, flash, session, redirect)
-from model import connect_to_db, db
+from model import connect_to_db, db, User,Skill, UserSkill, Post, PostSkill
+from flask_sqlalchemy import SQLAlchemy
 from jinja2 import StrictUndefined
+import crud
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -12,6 +14,81 @@ def homepage():
     """View homepage."""
 
     return render_template('homepage.html')
+
+@app.route("/users")
+def all_users():
+    """View all users."""
+
+    users = crud.get_users()
+
+    return render_template("all_users.html", users=users)
+
+@app.route("/users/<user_id>")
+def show_user(user_id):
+    """Show details on a particular user."""
+
+    user = crud.get_user_by_id(user_id)
+
+    return render_template("user_details.html", user=user)
+
+
+@app.route('/login', methods=['GET'])
+def show_login():
+    """Show Login Page"""
+
+    return render_template("login.html")
+
+@app.route('/login', methods=['POST'])
+def handle_login():
+    """Log in user"""
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    user = crud.get_user_by_username(username)
+
+    if not user or user.password != password:
+        print(f"username:{user}")
+        flash("The username or password you entered was incorrect.")
+    else:
+        # log in user by storing the username in session
+        session["username"] = user.username
+        flash(f"Welcome back, {user.username}")
+        
+    # may change redirect route to community page later
+    return redirect('/profile')
+
+@app.route('/signup', methods=['GET'])
+def show_signup():
+    """Show Sign Up Page"""
+
+    return render_template("signup.html")
+
+@app.route('/signup', methods=['POST'])
+def handle_signup():
+    """Sign Up User"""
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    interest = request.form.get('interest')
+    bio = request.form.get('bio')
+
+    # check if a user with the username from request.form already exists.
+    user = crud.get_user_by_username(username)
+    print(f"user: {user}")
+
+    if user:
+        flash("Username already exist. Please try again.")
+        return render_template('signup.html')
+    else:
+        user = crud.create_user(username, email, password, interest, bio)
+        db.session.add(user)
+        db.session.commit()
+        flash("Account created. Please log in.")
+    
+    return redirect('/')
+
 
 
 @app.route('/add_post', methods=["GET"])
@@ -34,6 +111,8 @@ def add_post():
 
     if title and skills and description:
         return redirect('/detail')
+    else:
+        flash("Please enter all information.")
 
 
 @app.route('/detail')
@@ -44,10 +123,16 @@ def show_detail():
 
 
 @app.route('/profile')
-def profile():
+def show_profile():
     """View user profile page."""
 
-    return render_template('profile.html')
+    # get the current user's username from the session
+    username = session.get("username")
+
+    # get the user object for the current user
+    user = crud.get_user_by_username(username)
+
+    return render_template('profile.html', user=user)
 
 
 

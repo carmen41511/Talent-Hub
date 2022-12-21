@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }}'s Page{% endblock %}
+
+{% block body %}
+<h1>{{ user.username }}'s User Details Page</h1>
+<ul>
+    {% if session.get('username') %}
+        Python
+    {% endif %}
+</ul>
+
+
+{% endblock %}

@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="/static/css/styles.css">
   </head>
   <body>
+    {% for msg in get_flashed_messages() %}
+      <p class="flash-msg">
+        {{ msg }}
+      </p>
+    {% endfor %}
+
     {% block body %} BODY CONTENT GOES HERE {% endblock %}
 
     {% block after_body %}{% endblock %}

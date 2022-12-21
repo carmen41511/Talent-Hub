@@ -19,10 +19,10 @@ class User(db.Model):
     user_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    user_name = db.Column(db.String, unique=True)
-    email = db.Column(db.String, unique=True)
+    username = db.Column(db.String, unique=True)
     # should I include the password attribute?
     password = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
     interest = db.Column(db.String)
     bio = db.Column(db.String)
     
@@ -32,7 +32,7 @@ class User(db.Model):
     posts = db.relationship("Post", back_populates="user")
 
     def __repr__(self):
-        return f'<User user_id={self.user_id} user_name={self.user_name} email={self.email} \npassword={self.password} \ninterest={self.interest} \nbio={self.bio}>'
+        return f'<User user_id={self.user_id} username={self.username} email={self.email} \npassword={self.password} \ninterest={self.interest} \nbio={self.bio}>'
 
 
 class Skill(db.Model):
@@ -91,11 +91,11 @@ class Post(db.Model):
         return f'<Post post_id={self.post_id} title={self.title} post_date={self.post_date} \n description={self.description}>'
 
 
-class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    description = CKEditorField('Content', Validators=[DataRequired()])
-    skills = SelectMultipleField("Related Skills", choices=['Customer Service','Sales','Accounting','Businesses Development','Marketing', 'Leadership','Communication', 'Agile Project Management','Web Development','Digital Marketing','Cybersecurity', 'Innovation Management','Digital Marketing','Engineering','SQL'])
-    submit = SubmitField("Submit")
+# class PostForm(FlaskForm):
+#     title = StringField("Title", validators=[DataRequired()])
+#     description = CKEditorField('Content', Validators=[DataRequired()])
+#     skills = SelectMultipleField("Related Skills", choices=['Customer Service','Sales','Accounting','Businesses Development','Marketing', 'Leadership','Communication', 'Agile Project Management','Web Development','Digital Marketing','Cybersecurity', 'Innovation Management','Digital Marketing','Engineering','SQL'])
+#     submit = SubmitField("Submit")
 
 
 

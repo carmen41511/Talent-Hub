@@ -5,10 +5,10 @@ from model import db, User, Skill, UserSkill, Post, PostSkill, connect_to_db
 from random import sample
 
 
-def create_user(user_name, email, password, interest, bio):
+def create_user(username, email, password, interest, bio):
     """Create and return a new user."""
 
-    user = User(user_name=user_name, email=email, password=password, interest=interest, bio=bio)
+    user = User(username=username, email=email, password=password, interest=interest, bio=bio)
 
     return user
 
@@ -37,6 +37,17 @@ def get_user_by_id(user_id):
 
     return User.query.get(user_id)
 
+def get_user_by_username(username):
+
+    user = User.query.filter(User.username == username).first()
+    print(f"user: {user}")
+
+    return user
+
+def get_users():
+    """Return all users."""
+
+    return User.query.all()
     
 
 

@@ -47,13 +47,13 @@ for skill in skills:
     skill_ls.append(crud.create_skill(skill))
 
 for n in range(10):
-    user_name = f'user{n}'
+    username = f'user{n}'
     email = f'user{n}@test.com'
     password = 'test'
     interest = choice(interests)
     bio = f'I am user{n}'
 
-    user = crud.create_user(user_name, email, password, interest, bio)
+    user = crud.create_user(username, email, password, interest, bio)
 
     # each user has 5 posts,each post has 5 skills
     for i in range(5):
