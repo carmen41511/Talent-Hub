@@ -1,6 +1,5 @@
-from flask import (Flask, render_template, request, flash, session, redirect)
+from flask import (Flask, render_template, request, flash, session, redirect, jsonify)
 from model import connect_to_db, db, User,Skill, UserSkill, Post, PostSkill
-from flask_sqlalchemy import SQLAlchemy
 from jinja2 import StrictUndefined
 import crud
 
@@ -30,6 +29,36 @@ def show_user(user_id):
     user = crud.get_user_by_id(user_id)
 
     return render_template("user_details.html", user=user)
+
+@app.route("/edit-bio")
+def show_bio_modal():
+    """Show modal for editing About Me"""
+
+    # get the current user's username from the session
+    username = session.get("username")
+
+    # get the user object for the current user
+    user = crud.get_user_by_username(username)
+
+    #  what template should I render?
+    return render_template("edit_bio_modal.html", user=user)
+
+@app.route('/edit-bio', methods=['POST'])
+def edit_bio():
+    # Get the updated bio from the request
+    updated_bio = request.form['bio']
+    # updated_bio = request.get_json('bio')
+
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+
+    # Update the user's bio in the database
+    user.bio = updated_bio
+    db.session.commit()
+
+    # Return a success message
+    return jsonify({'success': True})
+
 
 
 @app.route('/login', methods=['GET'])

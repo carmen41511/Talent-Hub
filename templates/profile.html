@@ -3,17 +3,131 @@
 
 {% block body %}
 <h1>{{user.username}} Profile</h1>
-<h2>About</h2>
-{{user.bio}}<br>
+<br>
+
+<h2>About Me</h2>
+
+<div id="bio-display">{{user.bio}}</div><br>
+
+{% block bio_modal %}
+<div class="modal" id="aboutMeModal" tabindex="-1" aria-labelledby="aboutMeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="aboutMeModalLabel">Edit About Me</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form action="/edit-bio" method="POST">
+            <div class="mb-3">
+              <label for="edit-bio" class="col-form-label">Enter your update:</label>
+              <textarea class="form-control" id="edit-bio" name="bio" rows="5" cols="50">{{user.bio}}</textarea>
+            </div>
+            <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveID">Save</a>
+        </form>
+    </div>
+    
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" id="buttonSaveID">Save</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+<!-- use JavaScript to trigger the modal window when the button is clicked. You can do this by adding a data-toggle attribute to the button with a value of "modal" and a data-target attribute with a value of the ID of the modal element (e.g., data-target="#exampleModal"). You can then remove the href attribute from the button and add an onclick event handler that calls the modal() function -->
+
+{% block script1 %} 
+<script>
+    $(document).ready(function(){
+        $("#editAboutMeButton").click(function(e){
+            $("#aboutMeModal").modal("show");
+            e.preventDefault();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('#buttonSaveID').click(function(e){
+            const updatedBio = $("#aboutMeModal #edit-bio").val().trim();
+            // console.log("claled", updatedBio);
+            e.preventDefault();
+
+            $.ajax({
+                url: '/edit-bio',
+                type:'POST',
+                data:{'bio': updatedBio},
+                success: function(response){
+                    console.log(response)
+
+                    if (response.success) {
+                        // Update the bio on the page
+                        $('#bio-display').html(updatedBio);
+                        // Close the modal window
+                        $('#aboutMeModal').modal('hide');
+                    } else {
+                        // Display an error message
+                        $('#bio-display').html('An error occured');
+                    }
+                }
+            })
+        });
+    });
+</script>
+{% endblock %}
+
+<a id="editAboutMeButton" class="btn btn-outline-success">Edit About Me</a>
+
+<br><br>
+
+
+<h2>Skills</h2><br>
 
 
 <h2>Interest</h2>
 
-{{user.interest}}<br>
+<div>{{user.interest}}</div><br>
 
+{% block skill_modal %}
+<div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="interestModalLabel">Edit Interest</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="edit-bio" class="col-form-label">Enter your update:</label>
+              <textarea class="form-control" id="edit-bio" rows="5" cols="50">{{user.interest}}</textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <a href="{{url_for('show_profile')}}" class="btn btn-secondary">Save</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
-<h2>Skills</h2>
+{% block script2 %} 
+<script>
+    $(document).ready(function(){
+        $("#editInterestButton").click(function(){
+            $("#interestModal").modal("show");
+        });
+    });
+</script>
+{% endblock %}
 
+<a id="editInterestButton" class="btn btn-outline-success">Edit Interest</a>
+
+<br><br>
 
 
 <h2>My Posts</h2>
