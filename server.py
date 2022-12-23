@@ -30,18 +30,18 @@ def show_user(user_id):
 
     return render_template("user_details.html", user=user)
 
-@app.route("/edit-bio")
-def show_bio_modal():
-    """Show modal for editing About Me"""
+# @app.route("/edit-bio")
+# def show_bio_modal():
+#     """Show modal for editing About Me"""
 
-    # get the current user's username from the session
-    username = session.get("username")
+#     # get the current user's username from the session
+#     username = session.get("username")
 
-    # get the user object for the current user
-    user = crud.get_user_by_username(username)
+#     # get the user object for the current user
+#     user = crud.get_user_by_username(username)
 
-    #  what template should I render?
-    return render_template("edit_bio_modal.html", user=user)
+#     #  what template should I render?
+#     return render_template("edit_bio_modal.html", user=user)
 
 @app.route('/edit-bio', methods=['POST'])
 def edit_bio():
@@ -58,6 +58,18 @@ def edit_bio():
 
     # Return a success message
     return jsonify({'success': True})
+
+
+@app.route('/edit-interest', methods=['POST'])
+def edit_interest():
+    updated_interest = request.form['interest']
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+    user.interest = updated_interest
+    db.session.commit()
+
+    return jsonify({'success': True})
+
 
 
 

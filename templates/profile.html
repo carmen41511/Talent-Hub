@@ -25,11 +25,11 @@
               <label for="edit-bio" class="col-form-label">Enter your update:</label>
               <textarea class="form-control" id="edit-bio" name="bio" rows="5" cols="50">{{user.bio}}</textarea>
             </div>
-            <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveID">Save</a>
-        </form>
-    </div>
-    
-    <div class="modal-footer">
+          </form>
+        </div>
+        
+        <div class="modal-footer">
+          <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveID">Save</a>
         <!-- <button type="button" class="btn btn-secondary" id="buttonSaveID">Save</button> -->
         </div>
       </div>
@@ -52,8 +52,8 @@
 <script>
     $(document).ready(function(){
         $('#buttonSaveID').click(function(e){
+            // The #aboutMeModal element is the parent container for the modal window, and the #edit-bio element is the textarea element inside the modal, using both IDs in the selector, the code is specifically selecting the '#edit-bio' element within the '#aboutMeModal' element
             const updatedBio = $("#aboutMeModal #edit-bio").val().trim();
-            // console.log("claled", updatedBio);
             e.preventDefault();
 
             $.ajax({
@@ -89,26 +89,29 @@
 
 <h2>Interest</h2>
 
-<div>{{user.interest}}</div><br>
+<div id='interest-display'>{{user.interest}}</div><br>
 
 {% block skill_modal %}
 <div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
+
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="interestModalLabel">Edit Interest</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
           <form>
             <div class="mb-3">
-              <label for="edit-bio" class="col-form-label">Enter your update:</label>
-              <textarea class="form-control" id="edit-bio" rows="5" cols="50">{{user.interest}}</textarea>
+              <label for="edit-interest" class="col-form-label">Enter your update:</label>
+              <textarea class="form-control" id="edit-interest" name="interest" rows="5" cols="50">{{user.interest}}</textarea>
             </div>
           </form>
         </div>
+        
         <div class="modal-footer">
-          <a href="{{url_for('show_profile')}}" class="btn btn-secondary">Save</a>
+          <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveinterest">Save</a>
         </div>
       </div>
     </div>
@@ -118,10 +121,39 @@
 {% block script2 %} 
 <script>
     $(document).ready(function(){
-        $("#editInterestButton").click(function(){
+        $("#editInterestButton").click(function(e){
             $("#interestModal").modal("show");
+            e.preventDefault();
         });
     });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('#buttonSaveinterest').click(function(e){
+            const updatedInterest = $('#interestModal #edit-interest').val().trim();
+            e.preventDefault();
+            
+            $.ajax({
+                url: '/edit-interest',
+                type: 'POST',
+                data: {'interest': updatedInterest},
+                success: function(response){
+                    console.log(response)
+
+                    if (response.success){
+                        $('#interest-display').html(updatedInterest);
+                        $('#interestModal').modal('hide');
+                    } else {
+                        $('#interest-display').html('An error occured');
+                    }
+                }
+            
+            })
+
+        })
+    })
+
 </script>
 {% endblock %}
 
