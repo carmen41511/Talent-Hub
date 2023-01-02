@@ -2,6 +2,7 @@ from flask import (Flask, render_template, request, flash, session, redirect, js
 from model import connect_to_db, db, User,Skill, UserSkill, Post, PostSkill
 from jinja2 import StrictUndefined
 import crud
+import json
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -30,18 +31,6 @@ def show_user(user_id):
 
     return render_template("user_details.html", user=user)
 
-# @app.route("/edit-bio")
-# def show_bio_modal():
-#     """Show modal for editing About Me"""
-
-#     # get the current user's username from the session
-#     username = session.get("username")
-
-#     # get the user object for the current user
-#     user = crud.get_user_by_username(username)
-
-#     #  what template should I render?
-#     return render_template("edit_bio_modal.html", user=user)
 
 @app.route('/edit-bio', methods=['POST'])
 def edit_bio():
@@ -59,6 +48,23 @@ def edit_bio():
     # Return a success message
     return jsonify({'success': True})
 
+
+@app.route('/edit-skills', methods=['POST'])
+def edit_skills():
+    print("called")
+    updated_skills = request.form.getlist('skills')
+    # updated_skills_ls = json.loads(updated_skills)
+    print(f"updated_skills: {updated_skills}")
+
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+    print(user)
+    
+    user.skills = updated_skills
+    print(user.skills)
+    db.session.commit()
+
+    return jsonify({'skills': updated_skills})
 
 @app.route('/edit-interest', methods=['POST'])
 def edit_interest():

@@ -86,12 +86,255 @@
 
 <h2>Skills</h2><br>
 
+<div id="skills-display"></div>
+
+{% block skill_modal %}
+<div class="modal" id="skillsModal" tabindex="-1" aria-labelledby="skillsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="skillsModalLabel">Edit Skills</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form action="/edit-skills" method="POST">
+          <div class="mb-3">
+            <label for="edit-skills" class="col-form-label">Select your top skills:</label>
+            <p><i>Hold down the control (ctrl) / command button to select multiple options</i></p>
+            <select name="skills" id="skills-select" multiple size="8">
+              <option value="a/b">A/B Testing</option>
+              <option value="b2b">B2B Marketing</option>
+              <option value="backend">Backend Development</option>
+              <option value="c">C</option>
+              <option value="campaign">Campaign Marketing</option>
+              <option value="3d">3D Design</option>
+              <option value="facebook">Facebook Ads</option>
+              <option value="http">HTTP</option>
+              <option value="icon">Icon Design</option>
+              <option value="illustration">Illustration</option>
+              <option value="json">JSON</option>
+              <option value="java">Java</option>
+              <option value="javascript">Javascript</option>
+              <option value="keyframe">Keyframe Animation</option>
+              <option value="latex">LaTex</option>
+              <option value="management">Management</option>
+              <option value="nltk">NLTK</option>
+              <option value="nlp">Natural Language Processing</option>
+              <option value="oop">Object Oriented Progamming</option>
+              <option value="php">PHP</option>
+              <option value="qa">Quality Assurance</option>
+              <option value="R">R</option>
+              <option value="rest">REST</option>
+              <option value="seo">SEO</option>
+              <option value="tailwind">Tailwind CSS</option>
+              <option value="uml">UML</option>
+              <option value="ux">UX Writing</option>
+              <option value="ui">UI Design</option>
+              <option value="valuation">valuation</option>
+              <option value="web research">Web Research</option>
+              <option value="web3">Web3</option>
+              <option value="xampp">Xampp</option>
+              <option value="xml">XML</option>
+              <option value="zapier">Zapier</option>
+              <option value="zendesk">Zendesk</option>    
+            </select>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveskills">Save</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script2 %} 
+
+<script>
+  $(document).ready(function(){
+      $("#editSkillsButton").click(function(e){
+          $("#skillsModal").modal("show");
+          e.preventDefault();
+      });
+  });
+</script>
+
+<script>
+
+// function getSelectValues(select) {
+//     var result = [];
+//     var options = select.options;
+//     var opt;
+
+//     for (var i=0, iLen=options.length; i<iLen; i++) {
+//       opt = options[i];
+
+//       if (opt.selected) {
+//         result.push(opt.value || opt.text);
+//       }
+//     }
+//     return result;
+//   }
+
+//   $(document).ready(function(){
+//       $("#buttonSaveskills").click(function(e){
+//           e.preventDefault();
+//           var skills = getSelectValues(document.getElementById("skills-select"));
+//           $.ajax({
+//               url: '/edit-skills',
+//               type: 'POST',
+//               data: {'skills': skills},
+//               success: function(response) {
+//                   if (response.success) {
+//                       $('#skillsModal').modal('hide');
+//                       $('#skills-display').html(response.skills);
+//                   }
+//               }
+//           });
+//       });
+//   });
+
+  function getSelectValues(select) {
+  var result = [];
+  var options = select.options;
+  var opt;
+
+  for (var i=0, iLen=options.length; i<iLen; i++) {
+    opt = options[i];
+
+    if (opt.selected) {
+      result.push(opt.innerHTML);
+    }
+  }
+  return result;
+}
+
+  document.querySelector('#buttonSaveskills').addEventListener('click', (e) =>{
+    const dropdown = document.getElementsByTagName('select')[0];
+    e.preventDefault();
+
+    // result is an array
+    const result = getSelectValues(dropdown);
+    console.log(`result: ${result}`);    
+    
+    // let text = "<ul>";
+    let text = "";
+    for (const res of result) {
+      text += `${res},`;
+    }
+    // console.log(text)
+    // $("#skills-display").html(text);
+
+    $.ajax({
+            url: '/edit-skills',
+            type: 'POST',
+            data: {'skills': result},
+            
+            success: function(response){
+              try{
+                console.log(response);
+                $('#skills-display').html(result);
+                $('#skillsModal').modal('hide');
+              } catch (e){
+                console.log(e)
+                $('#skills-display').html('An error occured');
+              }
+  
+            //     if (response.success){
+            //       console.log('success');
+            //         // $('#skills-display').html(result);
+            //         $('#skillsModal').modal('hide');
+            //     } else {
+            //       console.log('nope');
+            //         $('#skills-display').html('An error occured');
+            //     }
+            // }
+            
+            }})
+    })
+
+  // })
+
+
+    // fetch('/edit-skills', {
+    //   method: 'POST',
+    // })
+    // .then((response) => response.tex())
+    // .then((responseData) => {
+    //   result = responseData;
+    // });
+    // console.log(getSelectValues(dropdown));
+    
+    // document.getElementById('#skillsModal').onclick = function(){
+    //   const dropdown = document.getElementsByTagName('select')[0];
+    //   const result = [];
+    //   const options = dropdown.options;
+    //   var opt;
+
+    //   for (var i=0; iLen = options.length; i<iLen; i++){
+    //     opt = options[i];
+
+    //     if (opt.selected){
+    //       result.push(opt.innerHTML);
+    //     }
+    //   }
+
+      // for (const skill of document.getElementById('#skills-select').options)
+      // {if (skill.selected){
+      //   selected.push(skill.value);
+      // }}
+      // alert(selected);
+
+  // $(document).ready(function(){
+  //     $('#buttonSaveskills').click(function(e){
+  //         const selected = [];
+  //         const updatedSkills = $('#skillsModal #skills-select option:selected').text();
+  //         e.preventDefault();
+  //         console.log(updatedSkillsLs);
+          
+  //         $.ajax({
+  //             url: '/edit-skills',
+  //             type: 'POST',
+  //             data: {'skills': updatedSkills},
+  //             success: function(response){
+  //                 console.log(response)
+
+  //                 if (response.success){
+  //                   console.log('success');
+  //                     $('#skills-display').html(updatedSkills);
+  //                     $('#skillsModal').modal('hide');
+  //                 } else {
+  //                   console.log('nope');
+  //                     $('#skills-display').html('An error occured');
+  //                 }
+  //             }
+          
+  //         })
+
+  //     })
+  // }) 
+
+</script>
+
+
+{% endblock %}
+
+<a id="editSkillsButton" class="btn btn-outline-success">Edit Skills</a>
+
+<br><br>
+
+
 
 <h2>Interest</h2>
 
 <div id='interest-display'>{{user.interest}}</div><br>
 
-{% block skill_modal %}
+{% block interest_modal %}
 <div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -118,7 +361,7 @@
   </div>
 {% endblock %}
 
-{% block script2 %} 
+{% block script3 %} 
 <script>
     $(document).ready(function(){
         $("#editInterestButton").click(function(e){
@@ -163,7 +406,8 @@
 
 
 <h2>My Posts</h2>
-
+<br>
+<a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a>
 
 
 
