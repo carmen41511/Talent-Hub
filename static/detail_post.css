@@ -1,11 +1,4 @@
-{% extends 'base.html' %}
-{% block title %}Post Detail{% endblock %}
-
-
-{% block body %}
-
-<style>
-    .card {
+/* .card {
     margin: 0 auto;}
 
     .title {
@@ -80,46 +73,4 @@
         justify-content: center;
         text-decoration: none;
         background-color: rgb(225, 231, 250)
-    }
-    
-</style>
-
-<div class="card" style="width: 50rem;height: 50rem; margin-top:5rem; margin-bottom: 5rem;">
-    <div class="card-body">
-
-    <div class="title">
-        <h3 class="card-title">Title</h3>
-    </div>
-
-    <div class="flex-container">
-        <div>Posted: date</div>
-        <div>Posted by: user123</div>
-    </div>
-    
-    <div class="divider"></div>
-
-    <h4 class="card-title">Description</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-
-    <div class="divider2"></div>
-
-    <div class="skills-div skills-bottom">
-        <h4 class="card-title">Skills</h5>
-        
-        <div class="skills-container">
-            <div class="one-skill-pill">
-                <span class="one-skill">Backend Development</span>
-            </div>
-
-            <div class="one-skill-pill">
-                <span class="one-skill">Frontend Development</span>
-            </div>
-
-        </div>
-    </div>
-
-    </div>
-  </div>
-
-
-{% endblock %}
+    } */
