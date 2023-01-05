@@ -86,6 +86,11 @@
 
 <h2>Skills</h2><br>
 
+<div id="selected-skills-display">
+  {{user.skills}}
+  <p>{{all_userSkill}}</p>
+</div>
+
 <div id="skills-display"></div>
 
 {% block skill_modal %}
@@ -104,48 +109,23 @@
             <label for="edit-skills" class="col-form-label">Select your top skills:</label>
             <p><i>Hold down the control (ctrl) / command button to select multiple options</i></p>
             <select name="skills" id="skills-select" multiple size="8">
-              <option value="a/b">A/B Testing</option>
-              <option value="b2b">B2B Marketing</option>
-              <option value="backend">Backend Development</option>
-              <option value="c">C</option>
-              <option value="campaign">Campaign Marketing</option>
-              <option value="3d">3D Design</option>
-              <option value="facebook">Facebook Ads</option>
-              <option value="http">HTTP</option>
-              <option value="icon">Icon Design</option>
-              <option value="illustration">Illustration</option>
-              <option value="json">JSON</option>
-              <option value="java">Java</option>
-              <option value="javascript">Javascript</option>
-              <option value="keyframe">Keyframe Animation</option>
-              <option value="latex">LaTex</option>
-              <option value="management">Management</option>
-              <option value="nltk">NLTK</option>
-              <option value="nlp">Natural Language Processing</option>
-              <option value="oop">Object Oriented Progamming</option>
-              <option value="php">PHP</option>
-              <option value="qa">Quality Assurance</option>
-              <option value="R">R</option>
-              <option value="rest">REST</option>
-              <option value="seo">SEO</option>
-              <option value="tailwind">Tailwind CSS</option>
-              <option value="uml">UML</option>
-              <option value="ux">UX Writing</option>
-              <option value="ui">UI Design</option>
-              <option value="valuation">valuation</option>
-              <option value="web research">Web Research</option>
-              <option value="web3">Web3</option>
-              <option value="xampp">Xampp</option>
-              <option value="xml">XML</option>
-              <option value="zapier">Zapier</option>
-              <option value="zendesk">Zendesk</option>    
+
+              {% for skill in all_skills %}
+                {% if skill in user.skills %}
+                  <option value={{skill.skill_id}} selected>{{skill.skill}}</option>
+                {% else %}
+                  <option value={{skill.skill_id}}>{{skill.skill}}</option>
+                {% endif %}
+              {% endfor %}
             </select>
           </div>
+          <!-- modify: use javascript for submit for async, use css to modify where it is placed-->
+          <input type="submit">
         </form>
       </div>
       
       <div class="modal-footer">
-        <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveskills">Save</a>
+        <!-- <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveskills">Save</a> -->
       </div>
     </div>
   </div>
@@ -165,6 +145,65 @@
 </script>
 
 <script>
+
+document.getElementById('buttonSaveskills').addEventListener('click', function(e) {
+  
+  e.preventDefault();
+
+  const skillsSelect = document.getElementById('skills-select');
+  const selectedOptions = skillsSelect.selectedOptions;
+
+  // Iterate over the selected options
+  for (let i = 0; i < selectedOptions.length; i++) {
+    // Get the text of the option
+    const skillName = selectedOptions[i].text;
+
+    console.log(skillName);
+
+
+    $.ajax({
+            url: '/edit-skills',
+            type:'POST',
+            data:{'skills': skillName},
+            success: function(response){
+                console.log(response)
+
+                if (response.success) {
+                  $('#selected-skills-display').html(skillName);
+                  $("#skillsModal").modal("hide");
+                } else {
+                    // Display an error message
+                    $('#selected-skills-display').html('An error occured');
+                }
+
+}});
+  }}); 
+
+//   const skillsSelect = document.getElementById('skills-select');
+//   const selectedOptions = skillsSelect.selectedOptions;
+
+//   // Iterate over the selected options
+//   for (let i = 0; i < selectedOptions.length; i++) {
+//     // Get the text of the option
+//     const skillName = selectedOptions[i].text;
+
+//     // Create a new element to display the skill name
+//     const skillElement = document.createElement('div');
+//     skillElement.innerText = skillName;
+
+//     // Append the skill element to the 'selected-skills-display' div
+//     document.getElementById('selected-skills-display').appendChild(skillElement);
+//   }
+// });
+
+// $("#buttonSaveskills").click(function(e) {
+//   // Get the selected skills from the form
+//   var selectedSkills = $("#skills-select").val();
+//   console.log(selectedSkills);
+  
+//   $("#selected-skills-display").html(selectedSkills.join(", "));
+// });
+
 
 // function getSelectValues(select) {
 //     var result = [];
@@ -199,64 +238,65 @@
 //       });
 //   });
 
-  function getSelectValues(select) {
-  var result = [];
-  var options = select.options;
-  var opt;
+//   function getSelectValues(select) {
+//   var result = [];
+//   var options = select.options;
+//   var opt;
 
-  for (var i=0, iLen=options.length; i<iLen; i++) {
-    opt = options[i];
+//   for (var i=0, iLen=options.length; i<iLen; i++) {
+//     opt = options[i];
 
-    if (opt.selected) {
-      result.push(opt.innerHTML);
-    }
-  }
-  return result;
-}
+//     if (opt.selected) {
+//       result.push(opt.innerHTML);
+//     }
+//   }
+//   return result;
+// }
 
-  document.querySelector('#buttonSaveskills').addEventListener('click', (e) =>{
-    const dropdown = document.getElementsByTagName('select')[0];
-    e.preventDefault();
+  // document.querySelector('#buttonSaveskills').addEventListener('click', (e) =>{
+  //   const dropdown = document.getElementsByTagName('select')[0];
+  //   e.preventDefault();
 
-    // result is an array
-    const result = getSelectValues(dropdown);
-    console.log(`result: ${result}`);    
+  //   // result is an array
+  //   const result = getSelectValues(dropdown);
+  //   console.log(`result: ${result}`);    
     
-    // let text = "<ul>";
-    let text = "";
-    for (const res of result) {
-      text += `${res},`;
-    }
+  //   // let text = "<ul>";
+  //   let text = "";
+  //   for (const res of result) {
+  //     text += `${res},`;
+  //   }
+  // })
     // console.log(text)
     // $("#skills-display").html(text);
 
-    $.ajax({
-            url: '/edit-skills',
-            type: 'POST',
-            data: {'skills': result},
+  //   $.ajax({
+  //           url: '/edit-skills',
+  //           type: 'POST',
+  //           data: {'skills': result},
             
-            success: function(response){
-              try{
-                console.log(response);
-                $('#skills-display').html(result);
-                $('#skillsModal').modal('hide');
-              } catch (e){
-                console.log(e)
-                $('#skills-display').html('An error occured');
-              }
+  //           success: function(response){
+  //             try{
+  //               console.log(response);
+  //               $('#skills-display').html(result);
+  //               $('#skillsModal').modal('hide');
+  //             } catch (e){
+  //               console.log(e)
+  //               $('#skills-display').html('An error occured');
+  //             }
   
-            //     if (response.success){
-            //       console.log('success');
-            //         // $('#skills-display').html(result);
-            //         $('#skillsModal').modal('hide');
-            //     } else {
-            //       console.log('nope');
-            //         $('#skills-display').html('An error occured');
-            //     }
-            // }
+  //           //     if (response.success){
+  //           //       console.log('success');
+  //           //         // $('#skills-display').html(result);
+  //           //         $('#skillsModal').modal('hide');
+  //           //     } else {
+  //           //       console.log('nope');
+  //           //         $('#skills-display').html('An error occured');
+  //           //     }
+  //           // }
             
-            }})
-    })
+  //           }})
+  //   })
 
   // })
 
