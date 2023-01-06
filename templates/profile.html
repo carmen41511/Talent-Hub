@@ -2,453 +2,304 @@
 {% block title %}Talent Hub{% endblock %}
 
 {% block body %}
-<h1>{{user.username}} Profile</h1>
-<br>
+<style>
+.overall-profile {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+</style>
 
-<h2>About Me</h2>
+<div class="overall-profile">
+  <div class="overall-profile-inner" style="max-width: 1280px; padding: 40px 80px;">
 
-<div id="bio-display">{{user.bio}}</div><br>
-
-{% block bio_modal %}
-<div class="modal" id="aboutMeModal" tabindex="-1" aria-labelledby="aboutMeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="aboutMeModalLabel">Edit About Me</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <form action="/edit-bio" method="POST">
-            <div class="mb-3">
-              <label for="edit-bio" class="col-form-label">Enter your update:</label>
-              <textarea class="form-control" id="edit-bio" name="bio" rows="5" cols="50">{{user.bio}}</textarea>
-            </div>
-          </form>
-        </div>
-        
-        <div class="modal-footer">
-          <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveID">Save</a>
-        <!-- <button type="button" class="btn btn-secondary" id="buttonSaveID">Save</button> -->
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endblock %}
-
-<!-- use JavaScript to trigger the modal window when the button is clicked. You can do this by adding a data-toggle attribute to the button with a value of "modal" and a data-target attribute with a value of the ID of the modal element (e.g., data-target="#exampleModal"). You can then remove the href attribute from the button and add an onclick event handler that calls the modal() function -->
-
-{% block script1 %} 
-<script>
-    $(document).ready(function(){
-        $("#editAboutMeButton").click(function(e){
-            $("#aboutMeModal").modal("show");
-            e.preventDefault();
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-        $('#buttonSaveID').click(function(e){
-            // The #aboutMeModal element is the parent container for the modal window, and the #edit-bio element is the textarea element inside the modal, using both IDs in the selector, the code is specifically selecting the '#edit-bio' element within the '#aboutMeModal' element
-            const updatedBio = $("#aboutMeModal #edit-bio").val().trim();
-            e.preventDefault();
-
-            $.ajax({
-                url: '/edit-bio',
-                type:'POST',
-                data:{'bio': updatedBio},
-                success: function(response){
-                    console.log(response)
-
-                    if (response.success) {
-                        // Update the bio on the page
-                        $('#bio-display').html(updatedBio);
-                        // Close the modal window
-                        $('#aboutMeModal').modal('hide');
-                    } else {
-                        // Display an error message
-                        $('#bio-display').html('An error occured');
-                    }
-                }
-            })
-        });
-    });
-</script>
-{% endblock %}
-
-<a id="editAboutMeButton" class="btn btn-outline-success">Edit About Me</a>
-
-<br><br>
-
-
-<h2>Skills</h2><br>
-
-<div id="selected-skills-display">
-  {{user.skills}}
-  <p>{{all_userSkill}}</p>
-</div>
-
-<div id="skills-display"></div>
-
-{% block skill_modal %}
-<div class="modal" id="skillsModal" tabindex="-1" aria-labelledby="skillsModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="skillsModalLabel">Edit Skills</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-        <form action="/edit-skills" method="POST">
-          <div class="mb-3">
-            <label for="edit-skills" class="col-form-label">Select your top skills:</label>
-            <p><i>Hold down the control (ctrl) / command button to select multiple options</i></p>
-            <select name="skills" id="skills-select" multiple size="8">
-
-              {% for skill in all_skills %}
-                {% if skill in user.skills %}
-                  <option value={{skill.skill_id}} selected>{{skill.skill}}</option>
-                {% else %}
-                  <option value={{skill.skill_id}}>{{skill.skill}}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
-          <!-- modify: use javascript for submit for async, use css to modify where it is placed-->
-          <input type="submit">
-        </form>
-      </div>
+    <div class="left-side-profile" style="max-width: 413px; min-width: 413px;">
+      <img src="https://github.com/mdo.png" alt="mdo" width="92" height="92" class="rounded-circle">
       
-      <div class="modal-footer">
-        <!-- <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveskills">Save</a> -->
-      </div>
-    </div>
-  </div>
-</div>
+      <h1>{{user.username}} </h1>
+      <br>
 
-{% endblock %}
-
-{% block script2 %} 
-
-<script>
-  $(document).ready(function(){
-      $("#editSkillsButton").click(function(e){
-          $("#skillsModal").modal("show");
-          e.preventDefault();
-      });
-  });
-</script>
-
-<script>
-
-document.getElementById('buttonSaveskills').addEventListener('click', function(e) {
-  
-  e.preventDefault();
-
-  const skillsSelect = document.getElementById('skills-select');
-  const selectedOptions = skillsSelect.selectedOptions;
-
-  // Iterate over the selected options
-  for (let i = 0; i < selectedOptions.length; i++) {
-    // Get the text of the option
-    const skillName = selectedOptions[i].text;
-
-    console.log(skillName);
-
-
-    $.ajax({
-            url: '/edit-skills',
-            type:'POST',
-            data:{'skills': skillName},
-            success: function(response){
-                console.log(response)
-
-                if (response.success) {
-                  $('#selected-skills-display').html(skillName);
-                  $("#skillsModal").modal("hide");
-                } else {
-                    // Display an error message
-                    $('#selected-skills-display').html('An error occured');
-                }
-
-}});
-  }}); 
-
-//   const skillsSelect = document.getElementById('skills-select');
-//   const selectedOptions = skillsSelect.selectedOptions;
-
-//   // Iterate over the selected options
-//   for (let i = 0; i < selectedOptions.length; i++) {
-//     // Get the text of the option
-//     const skillName = selectedOptions[i].text;
-
-//     // Create a new element to display the skill name
-//     const skillElement = document.createElement('div');
-//     skillElement.innerText = skillName;
-
-//     // Append the skill element to the 'selected-skills-display' div
-//     document.getElementById('selected-skills-display').appendChild(skillElement);
-//   }
-// });
-
-// $("#buttonSaveskills").click(function(e) {
-//   // Get the selected skills from the form
-//   var selectedSkills = $("#skills-select").val();
-//   console.log(selectedSkills);
-  
-//   $("#selected-skills-display").html(selectedSkills.join(", "));
-// });
-
-
-// function getSelectValues(select) {
-//     var result = [];
-//     var options = select.options;
-//     var opt;
-
-//     for (var i=0, iLen=options.length; i<iLen; i++) {
-//       opt = options[i];
-
-//       if (opt.selected) {
-//         result.push(opt.value || opt.text);
-//       }
-//     }
-//     return result;
-//   }
-
-//   $(document).ready(function(){
-//       $("#buttonSaveskills").click(function(e){
-//           e.preventDefault();
-//           var skills = getSelectValues(document.getElementById("skills-select"));
-//           $.ajax({
-//               url: '/edit-skills',
-//               type: 'POST',
-//               data: {'skills': skills},
-//               success: function(response) {
-//                   if (response.success) {
-//                       $('#skillsModal').modal('hide');
-//                       $('#skills-display').html(response.skills);
-//                   }
-//               }
-//           });
-//       });
-//   });
-
-//   function getSelectValues(select) {
-//   var result = [];
-//   var options = select.options;
-//   var opt;
-
-//   for (var i=0, iLen=options.length; i<iLen; i++) {
-//     opt = options[i];
-
-//     if (opt.selected) {
-//       result.push(opt.innerHTML);
-//     }
-//   }
-//   return result;
-// }
-
-  // document.querySelector('#buttonSaveskills').addEventListener('click', (e) =>{
-  //   const dropdown = document.getElementsByTagName('select')[0];
-  //   e.preventDefault();
-
-  //   // result is an array
-  //   const result = getSelectValues(dropdown);
-  //   console.log(`result: ${result}`);    
     
-  //   // let text = "<ul>";
-  //   let text = "";
-  //   for (const res of result) {
-  //     text += `${res},`;
-  //   }
-  // })
-    // console.log(text)
-    // $("#skills-display").html(text);
 
-  //   $.ajax({
-  //           url: '/edit-skills',
-  //           type: 'POST',
-  //           data: {'skills': result},
-            
-  //           success: function(response){
-  //             try{
-  //               console.log(response);
-  //               $('#skills-display').html(result);
-  //               $('#skillsModal').modal('hide');
-  //             } catch (e){
-  //               console.log(e)
-  //               $('#skills-display').html('An error occured');
-  //             }
-  
-  //           //     if (response.success){
-  //           //       console.log('success');
-  //           //         // $('#skills-display').html(result);
-  //           //         $('#skillsModal').modal('hide');
-  //           //     } else {
-  //           //       console.log('nope');
-  //           //         $('#skills-display').html('An error occured');
-  //           //     }
-  //           // }
-            
-  //           }})
-  //   })
+      <h2>About Me</h2>
 
-  // })
+      <div id="bio-display">{{user.bio}}</div><br>
 
+      {% block bio_modal %}
+      <div class="modal" id="aboutMeModal" tabindex="-1" aria-labelledby="aboutMeModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
 
-    // fetch('/edit-skills', {
-    //   method: 'POST',
-    // })
-    // .then((response) => response.tex())
-    // .then((responseData) => {
-    //   result = responseData;
-    // });
-    // console.log(getSelectValues(dropdown));
-    
-    // document.getElementById('#skillsModal').onclick = function(){
-    //   const dropdown = document.getElementsByTagName('select')[0];
-    //   const result = [];
-    //   const options = dropdown.options;
-    //   var opt;
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="aboutMeModalLabel">Edit About Me</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
 
-    //   for (var i=0; iLen = options.length; i<iLen; i++){
-    //     opt = options[i];
-
-    //     if (opt.selected){
-    //       result.push(opt.innerHTML);
-    //     }
-    //   }
-
-      // for (const skill of document.getElementById('#skills-select').options)
-      // {if (skill.selected){
-      //   selected.push(skill.value);
-      // }}
-      // alert(selected);
-
-  // $(document).ready(function(){
-  //     $('#buttonSaveskills').click(function(e){
-  //         const selected = [];
-  //         const updatedSkills = $('#skillsModal #skills-select option:selected').text();
-  //         e.preventDefault();
-  //         console.log(updatedSkillsLs);
-          
-  //         $.ajax({
-  //             url: '/edit-skills',
-  //             type: 'POST',
-  //             data: {'skills': updatedSkills},
-  //             success: function(response){
-  //                 console.log(response)
-
-  //                 if (response.success){
-  //                   console.log('success');
-  //                     $('#skills-display').html(updatedSkills);
-  //                     $('#skillsModal').modal('hide');
-  //                 } else {
-  //                   console.log('nope');
-  //                     $('#skills-display').html('An error occured');
-  //                 }
-  //             }
-          
-  //         })
-
-  //     })
-  // }) 
-
-</script>
-
-
-{% endblock %}
-
-<a id="editSkillsButton" class="btn btn-outline-success">Edit Skills</a>
-
-<br><br>
-
-
-
-<h2>Interest</h2>
-
-<div id='interest-display'>{{user.interest}}</div><br>
-
-{% block interest_modal %}
-<div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="interestModalLabel">Edit Interest</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="edit-interest" class="col-form-label">Enter your update:</label>
-              <textarea class="form-control" id="edit-interest" name="interest" rows="5" cols="50">{{user.interest}}</textarea>
+              <div class="modal-body">
+                <form action="/edit-bio" method="POST">
+                  <div class="mb-3">
+                    <label for="edit-bio" class="col-form-label">Enter your update:</label>
+                    <textarea class="form-control" id="edit-bio" name="bio" rows="5" cols="50">{{user.bio}}</textarea>
+                  </div>
+                </form>
+              </div>
+              
+              <div class="modal-footer">
+                <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveID">Save</a>
+              <!-- <button type="button" class="btn btn-secondary" id="buttonSaveID">Save</button> -->
+              </div>
             </div>
-          </form>
+          </div>
         </div>
-        
-        <div class="modal-footer">
-          <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveinterest">Save</a>
+        {% endblock %}
+
+      <!-- use JavaScript to trigger the modal window when the button is clicked. You can do this by adding a data-toggle attribute to the button with a value of "modal" and a data-target attribute with a value of the ID of the modal element (e.g., data-target="#exampleModal"). You can then remove the href attribute from the button and add an onclick event handler that calls the modal() function -->
+
+      {% block script1 %} 
+      <script>
+          $(document).ready(function(){
+              $("#editAboutMeButton").click(function(e){
+                  $("#aboutMeModal").modal("show");
+                  e.preventDefault();
+              });
+          });
+      </script>
+
+      <script>
+          $(document).ready(function(){
+              $('#buttonSaveID').click(function(e){
+                  // The #aboutMeModal element is the parent container for the modal window, and the #edit-bio element is the textarea element inside the modal, using both IDs in the selector, the code is specifically selecting the '#edit-bio' element within the '#aboutMeModal' element
+                  const updatedBio = $("#aboutMeModal #edit-bio").val().trim();
+                  e.preventDefault();
+
+                  $.ajax({
+                      url: '/edit-bio',
+                      type:'POST',
+                      data:{'bio': updatedBio},
+                      success: function(response){
+                          console.log(response)
+
+                          if (response.success) {
+                              // Update the bio on the page
+                              $('#bio-display').html(updatedBio);
+                              // Close the modal window
+                              $('#aboutMeModal').modal('hide');
+                          } else {
+                              // Display an error message
+                              $('#bio-display').html('An error occured');
+                          }
+                      }
+                  })
+              });
+          });
+      </script>
+      {% endblock %}
+
+      <a id="editAboutMeButton" class="btn btn-outline-success">Edit About Me</a>
+
+      <br><br>
+
+
+      <h2>Skills</h2><br>
+
+      <div id="selected-skills-display">
+        {{user.skills}}
+        <p>{{all_userSkill}}</p>
+      </div>
+
+      <div id="skills-display"></div>
+
+      {% block skill_modal %}
+      <div class="modal" id="skillsModal" tabindex="-1" aria-labelledby="skillsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="skillsModalLabel">Edit Skills</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <form action="/edit-skills" method="POST">
+                <div class="mb-3">
+                  <label for="edit-skills" class="col-form-label">Select your top skills:</label>
+                  <p><i>Hold down the control (ctrl) / command button to select multiple options</i></p>
+                  <select name="skills" id="skills-select" multiple size="8">
+
+                    {% for skill in all_skills %}
+                      {% if skill in user.skills %}
+                        <option value={{skill.skill_id}} selected>{{skill.skill}}</option>
+                      {% else %}
+                        <option value={{skill.skill_id}}>{{skill.skill}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+                <!-- modify: use javascript for submit for async, use css to modify where it is placed-->
+                <input type="submit">
+              </form>
+            </div>
+            
+            <div class="modal-footer">
+              <!-- <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveskills">Save</a> -->
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-{% endblock %}
 
-{% block script3 %} 
-<script>
-    $(document).ready(function(){
-        $("#editInterestButton").click(function(e){
-            $("#interestModal").modal("show");
-            e.preventDefault();
+      {% endblock %}
+
+      {% block script2 %} 
+
+      <script>
+        $(document).ready(function(){
+            $("#editSkillsButton").click(function(e){
+                $("#skillsModal").modal("show");
+                e.preventDefault();
+            });
         });
-    });
-</script>
+      </script>
 
-<script>
-    $(document).ready(function(){
-        $('#buttonSaveinterest').click(function(e){
-            const updatedInterest = $('#interestModal #edit-interest').val().trim();
-            e.preventDefault();
-            
-            $.ajax({
-                url: '/edit-interest',
-                type: 'POST',
-                data: {'interest': updatedInterest},
-                success: function(response){
-                    console.log(response)
+      <script>
 
-                    if (response.success){
-                        $('#interest-display').html(updatedInterest);
-                        $('#interestModal').modal('hide');
-                    } else {
-                        $('#interest-display').html('An error occured');
-                    }
-                }
-            
-            })
+      document.getElementById('buttonSaveskills').addEventListener('click', function(e) {
+        
+        e.preventDefault();
 
-        })
-    })
+        const skillsSelect = document.getElementById('skills-select');
+        const selectedOptions = skillsSelect.selectedOptions;
 
-</script>
-{% endblock %}
+        // Iterate over the selected options
+        for (let i = 0; i < selectedOptions.length; i++) {
+          // Get the text of the option
+          const skillName = selectedOptions[i].text;
 
-<a id="editInterestButton" class="btn btn-outline-success">Edit Interest</a>
-
-<br><br>
+          console.log(skillName);
 
 
-<h2>My Posts</h2>
-<br>
-<a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a>
+          $.ajax({
+                  url: '/edit-skills',
+                  type:'POST',
+                  data:{'skills': skillName},
+                  success: function(response){
+                      console.log(response)
+
+                      if (response.success) {
+                        $('#selected-skills-display').html(skillName);
+                        $("#skillsModal").modal("hide");
+                      } else {
+                          // Display an error message
+                          $('#selected-skills-display').html('An error occured');
+                      }
+
+      }});
+        }}); 
+
+      </script>
+
+      {% endblock %}
+
+      <a id="editSkillsButton" class="btn btn-outline-success">Edit Skills</a>
+
+      <br><br>
 
 
+
+      <h2>Interest</h2>
+
+      <div id='interest-display'>{{user.interest}}</div><br>
+
+      {% block interest_modal %}
+      <div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="interestModalLabel">Edit Interest</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="edit-interest" class="col-form-label">Enter your update:</label>
+                    <textarea class="form-control" id="edit-interest" name="interest" rows="5" cols="50">{{user.interest}}</textarea>
+                  </div>
+                </form>
+              </div>
+              
+              <div class="modal-footer">
+                <a href="{{url_for('show_profile')}}" class="btn btn-secondary" id="buttonSaveinterest">Save</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endblock %}
+
+      {% block script3 %} 
+      <script>
+          $(document).ready(function(){
+              $("#editInterestButton").click(function(e){
+                  $("#interestModal").modal("show");
+                  e.preventDefault();
+              });
+          });
+      </script>
+
+      <script>
+          $(document).ready(function(){
+              $('#buttonSaveinterest').click(function(e){
+                  const updatedInterest = $('#interestModal #edit-interest').val().trim();
+                  e.preventDefault();
+                  
+                  $.ajax({
+                      url: '/edit-interest',
+                      type: 'POST',
+                      data: {'interest': updatedInterest},
+                      success: function(response){
+                          console.log(response)
+
+                          if (response.success){
+                              $('#interest-display').html(updatedInterest);
+                              $('#interestModal').modal('hide');
+                          } else {
+                              $('#interest-display').html('An error occured');
+                          }
+                      }
+                  
+                  })
+
+              })
+          })
+
+      </script>
+      {% endblock %}
+
+      <a id="editInterestButton" class="btn btn-outline-success">Edit Interest</a>
+
+      <br><br>
+
+        
+          </div>
+  
+    
+    <div class="right-side-profile">
+      
+      <h2>My Posts</h2>
+      <br>
+      {{user.posts}}
+      <br>
+      <a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a>
+  
+    </div>
+
+  
+  </div>
+
+
+
+
+
+</div>
 
 {% endblock %}
