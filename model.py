@@ -40,8 +40,7 @@ class Skill(db.Model):
 
     __tablename__ = 'skills'
 
-    skill_id = db.Column(db.Integer,
-                        autoincrement=True,
+    skill_id = db.Column(db.String,
                         primary_key=True)
     skill = db.Column(db.String)
 
@@ -62,7 +61,7 @@ class UserSkill(db.Model):
                         autoincrement=True,
                         primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    skill_id = db.Column(db.Integer, db.ForeignKey("skills.skill_id"),nullable=False)
+    skill_id = db.Column(db.String, db.ForeignKey("skills.skill_id"),nullable=False)
 
 
     def __repr__(self):
@@ -78,8 +77,8 @@ class Post(db.Model):
                         autoincrement=True,
                         primary_key=True)
     title = db.Column(db.String)
-    description = db.Column(db.String)
     post_date = db.Column(db.DateTime)
+    description = db.Column(db.String)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),nullable=False)
     # email = db.Column(db.String, db.ForeignKey('users.email'), unique=True)
@@ -109,14 +108,14 @@ class PostSkill(db.Model):
                         autoincrement=True,
                         primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'),nullable=False)
-    skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'),nullable=False)
+    skill_id = db.Column(db.String, db.ForeignKey('skills.skill_id'),nullable=False)
 
     def __repr__(self):
         return f'<PostSkill post_skill_id={self.post_skill_id} post_id={self.post_id} skill_id={self.skill_id}>'
 
 
 
-def connect_to_db(flask_app, db_uri="postgresql:///talents", echo=True):
+def connect_to_db(flask_app, db_uri="postgresql:///talents", echo=False):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

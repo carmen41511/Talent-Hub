@@ -3,6 +3,8 @@ from model import connect_to_db, db, User,Skill, UserSkill, Post, PostSkill
 from jinja2 import StrictUndefined
 import crud
 import json
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -15,6 +17,7 @@ def homepage():
 
     return render_template('homepage.html')
 
+
 @app.route("/users")
 def all_users():
     """View all users."""
@@ -22,6 +25,7 @@ def all_users():
     users = crud.get_users()
 
     return render_template("all_users.html", users=users)
+
 
 @app.route("/users/<user_id>")
 def show_user(user_id):
@@ -51,20 +55,58 @@ def edit_bio():
 
 @app.route('/edit-skills', methods=['POST'])
 def edit_skills():
-    print("called")
-    updated_skills = request.form.getlist('skills')
+
+    # print(request.form)
+    skill_set = request.form.getlist('skills')
     # updated_skills_ls = json.loads(updated_skills)
-    print(f"updated_skills: {updated_skills}")
+    print(f"updated_skills: {skill_set}")
 
     username = session.get("username")
     user = crud.get_user_by_username(username)
-    print(user)
-    
-    user.skills = updated_skills
-    print(user.skills)
-    db.session.commit()
 
-    return jsonify({'skills': updated_skills})
+    crud.delete_all_user_skills(user)
+
+    for skill_id in skill_set:
+        skill_obj = crud.get_skill_by_id(skill_id)
+        # print(f'skill_obj: {skill_obj.skill}')
+
+        skill = crud.create_skill(skill_id, skill_obj.skill)
+        print(f'skill: {skill}')
+
+        user_skill = crud.create_user_skill(user, skill)
+        db.session.add(user_skill)
+        db.session.commit()
+
+        print(f'user_skill: {user_skill}')
+        print(f'user.skills: {user.skills}')
+
+
+    return redirect('/profile')
+    # return jsonify({'user_skill_ls': user_skill_ls})
+    # user.skills = updated_skills
+    # print(user.skills)
+    # db.session.commit()
+
+    # return jsonify({'skills': updated_skills})
+
+# @app.route('/edit-skills')
+# def get_skills():
+#   # Get the currently logged-in user
+#   username = session.get("username")
+#   user = crud.get_user_by_username(username)
+#   print(user)
+
+#   skill_set = request.form.getlist('skills')
+  
+#   print(f'skill_set; {skill_set}')
+#   # Get the skills for the user
+#   user_skills = user.skills
+#   skills = [skill.skill for skill in user_skills]
+#   print(f'skills: {skills}')
+  
+#   # Return the skills as a JSON object
+#   return jsonify({'skills': skills})
+
 
 @app.route('/edit-interest', methods=['POST'])
 def edit_interest():
@@ -77,13 +119,12 @@ def edit_interest():
     return jsonify({'success': True})
 
 
-
-
 @app.route('/login', methods=['GET'])
 def show_login():
     """Show Login Page"""
 
     return render_template("login.html")
+
 
 @app.route('/login', methods=['POST'])
 def handle_login():
@@ -105,11 +146,13 @@ def handle_login():
     # may change redirect route to community page later
     return redirect('/profile')
 
+
 @app.route('/signup', methods=['GET'])
 def show_signup():
     """Show Sign Up Page"""
 
     return render_template("signup.html")
+
 
 @app.route('/signup', methods=['POST'])
 def handle_signup():
@@ -123,7 +166,7 @@ def handle_signup():
 
     # check if a user with the username from request.form already exists.
     user = crud.get_user_by_username(username)
-    print(f"user: {user}")
+    # print(f"user: {user}")
 
     if user:
         flash("Username already exist. Please try again.")
@@ -135,7 +178,6 @@ def handle_signup():
         flash("Account created. Please log in.")
     
     return redirect('/')
-
 
 
 @app.route('/add_post', methods=["GET"])
@@ -153,10 +195,44 @@ def add_post():
     """
 
     title = request.form.get("title")
-    skills = request.form.get("skills")
-    description = request.form.get("description")
+    print(f'title: {title}')
 
-    if title and skills and description:
+    skill_set = request.form.getlist('skills')
+    print(f'skill_set: {skill_set}')
+    # skill_set: ['b2b','3d']
+
+    description = request.form.get("description")
+    # print(f'description: {description}')
+
+    post_date = datetime.now()
+    # print(f'post_date: {post_date}')
+
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+    # print(f'user: {user}')
+
+    post = crud.create_post(title, post_date, description, user)
+    # post_id
+    db.session.add(post)
+    db.session.commit()
+    print(f'post: {post}')
+
+    for skill_id in skill_set:
+
+        # <Skills skill_id=backend skill=Backend Development>
+        skill_obj = crud.get_skill_by_id(skill_id)
+        print(skill_obj.skill_id)
+        print(f'skill_obj: {skill_obj}')  
+
+        post_skill = crud.create_post_skill(post, skill_obj)
+        db.session.add(post_skill)
+        db.session.commit()
+        print(f'post_skill: {post_skill}')
+        
+    # if post:
+    if title and skill_set and description:
+        # db.session.add(post)
+        # db.session.commit()
         return redirect('/detail')
     else:
         flash("Please enter all information.")
@@ -173,14 +249,30 @@ def show_detail():
 def show_profile():
     """View user profile page."""
 
-    # get the current user's username from the session
-    username = session.get("username")
+    all_skills = crud.return_skills()
 
-    # get the user object for the current user
+    username = session.get("username")
     user = crud.get_user_by_username(username)
 
-    return render_template('profile.html', user=user)
+    all_userSkill = crud.get_all_user_skills(user)
+    # print(f'all_userSkill: {all_userSkill}')
+    # print(f'show_profile() user: {user}')
+    # print(f'show_profile() user.skills: {user.skills}')
 
+    return render_template('profile.html', user=user, all_skills=all_skills, all_userSkill=all_userSkill)
+
+
+@app.route('/community')
+def show_community():
+    """View community page with all posts"""
+
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+
+    posts = crud.get_posts()
+
+
+    return render_template('community.html', user=user, posts=posts)
 
 
 if __name__ == "__main__":

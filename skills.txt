@@ -1,0 +1,35 @@
+a/b|A/B Testing
+b2b|B2B Marketing
+backend|Backend Development
+c|C
+campaign|Campaign Marketing
+3d|3D Design
+facebook|Facebook Ads
+http|HTTP
+icon|Icon Design
+illustration|Illustration
+json|JSON
+java|Java
+javascript|Javascript
+keyframe|Keyframe Animation
+latex|LaTex
+management|Management
+nltk|NLTK
+nlp|Natural Language Processing
+oop|Object Oriented Progamming
+php|PHP
+qa|Quality Assurance
+R|R
+rest|REST
+seo|SEO
+tailwind|Tailwind CSS
+uml|UML
+ux|UX Writing
+ui|UI Design
+valuation|Valuation
+web research|Web Research
+web3|Web3
+xampp|Xampp
+xml|XML
+zapier|Zapier
+zendesk|Zendesk
