@@ -10,13 +10,25 @@ app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
+def get_current_user():
+    username = session.get("username")
+
+    if username:
+        user = crud.get_user_by_username(username)  
+        return user
+    else:
+        return None
+
 
 @app.route('/')
 def homepage():
     """View homepage."""
 
-    return render_template('homepage.html')
+    user = get_current_user()
 
+    return render_template('homepage.html', user=user)
+
+    
 
 @app.route("/users")
 def all_users():
@@ -123,7 +135,9 @@ def edit_interest():
 def show_login():
     """Show Login Page"""
 
-    return render_template("login.html")
+    user = get_current_user()
+
+    return render_template("login.html", user=user)
 
 
 @app.route('/login', methods=['POST'])
@@ -151,7 +165,9 @@ def handle_login():
 def show_signup():
     """Show Sign Up Page"""
 
-    return render_template("signup.html")
+    user = get_current_user()
+
+    return render_template("signup.html", user=user)
 
 
 @app.route('/signup', methods=['POST'])
@@ -184,7 +200,11 @@ def handle_signup():
 def show_add_post():
     """Show add post page"""
 
-    return render_template('add_post.html')
+    username = session.get("username")
+    user = crud.get_user_by_username(username)
+
+
+    return render_template('add_post.html', user=user)
 
 
 @app.route('/add_post', methods=["POST"])
@@ -242,7 +262,9 @@ def add_post():
 def show_detail():
     """Show detail page of a post"""
 
-    return render_template('detail.html')
+    user = get_current_user()
+    
+    return render_template('detail.html', user=user)
 
 
 @app.route('/profile')

@@ -118,6 +118,16 @@ def delete_all_user_skills(user):
 
     return 
 
+def get_current_user():
+  user_id = db.session.get('user_id')
+  if user_id:
+    # query the database for the user object
+        user = User.query.get(user_id)
+        return user
+  else:
+        return None
+
+
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)
