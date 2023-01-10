@@ -1,7 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}Community Page{% endblock %}
 
+{% block js %}
+<script src="/js/posts.jsx" type="text/jsx"></script>
+{% endblock %}
+
 {% block body %}
+
+<style>
+  div.card {
+  border-radius: 3px;
+  border: 3px solid black;
+  width: 11em;
+  height: 25em;
+  margin: 2em;
+  padding: 1em;
+  display: inline-block;
+}
+
+
+</style>
+
 
 
 <body class="vsc-initialized" data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
@@ -16,7 +35,23 @@
     
         </div>
 
-      <main>
+    <div class="grid" id="all-cards">
+      <!-- Mount Balloonicorn's card on to this element. -->
+      <div id="balloonicorn"></div>
+    
+      <!-- Mount Float's card on to this element. -->
+      <div id="float"></div>
+    
+      <!-- Mount Llambda's card on to this element. -->
+      <div id="llambda"></div>
+    
+      <div id="merge"></div>
+    
+      <div id="polymorphism"></div>
+    </div>
+        
+    
+      <!-- <main>
         <div class="row row-cols-1 row-cols-md-3 mb-3 text-center" style="margin-top: 3rem;">
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
@@ -35,7 +70,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm">
               <div class="card-header py-3">
@@ -71,10 +106,10 @@
             </div>
           </div>
         </div>
-        
-      </main>
-    </div>
-    
-    </body>
+         -->
+      <!-- </main> -->
+  </div>
+  </body>
 
 {% endblock %}
+

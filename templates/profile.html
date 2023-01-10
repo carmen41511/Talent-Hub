@@ -2,6 +2,7 @@
 {% block title %}Talent Hub{% endblock %}
 
 {% block body %}
+
 <style>
 .overall-profile {
   display: flex;
@@ -26,6 +27,20 @@
     margin-bottom: 12px;
     background-color: #C0CBF0;
 }
+
+.pills {
+  background-color: #ddd;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+}
+
 </style>
 
 <div class="overall-profile">
@@ -35,30 +50,22 @@
       <img src="https://github.com/mdo.png" alt="mdo" width="92" height="92" class="rounded-circle">
       
       <h1>{{user.username}} </h1>
-      <br>
-
-      <!-- <div class="row row-cols-1 row-cols-md-3 mb-3 text-center" style="margin-top: 3rem;">
-        <div class="col">
-          <div class="card mb-4 rounded-3 shadow-sm">
-            <div class="card-header py-3">
-              <h4 class="my-0 fw-normal">About Me</h4>
-            </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
-              <div id="bio-display">{{user.bio}}</div><br>
-              <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
-            </div>
-          </div>
-        </div> -->
+      
 
       <!-- make the about me section into a card component -->
-      <div class="about-me-wrap" style="border: 1px solid rgb(225, 231, 250);border-radius: 8px; width: 20rem">
-        <div class="card-header text-center">
-        <h4>About Me</h4>
-      </div>
-      <div class="divider"></div>
+      <!-- <div class="about-me-wrap" style="border: 1px solid rgb(225, 231, 250);border-radius: 8px; width: 20rem"> -->
+        <div class="about-me-wrap" >
+        <!-- <div class="card-header text-center"> -->
+        <h3>About Me</h3>
+      <!-- </div> -->
+      <!-- <div class="divider"></div> -->
 
-      <div id="bio-display">{{user.bio}}</div><br>
+      <div id="bio-display" style="border: 1px solid rgb(225, 231, 250);border-radius: 8px; width: 20rem; height: 9rem">{{user.bio}}</div>
+      
+      <div class="edit-button" style="margin-top: 0.5rem; margin-left: 17rem;
+      ">
+        <a id="editAboutMeButton" class="btn btn-outline-info">Edit </a>
+    </div>
 
       {% block bio_modal %}
       <div class="modal" id="aboutMeModal" tabindex="-1" aria-labelledby="aboutMeModalLabel" aria-hidden="true">
@@ -130,17 +137,24 @@
       </script>
       {% endblock %}
 
-      <a id="editAboutMeButton" class="btn btn-outline-success">Edit About Me</a>
+      
     </div>
 
-      <br><br>
+      
 
-
-      <h4>My Skills</h4><br>
+      <div class="skill-wrap">
+      <h3>My Skills</h3>
 
       <div id="selected-skills-display">
-        {{user.skills}}
-        <p>{{all_userSkill}}</p>
+        {% for skill in user.skills %}
+          <button class="pills">{{ skill.skill }}</button>
+        {% endfor %}
+        <!-- <p>{{all_userSkill}}</p> -->
+      </div>
+
+      <div class="edit-button" style="margin-top: 0.5rem; margin-left: 17rem;
+      ">
+      <a id="editSkillsButton" class="btn btn-outline-info">Edit</a>
       </div>
 
       <div id="skills-display"></div>
@@ -182,6 +196,7 @@
           </div>
         </div>
       </div>
+    </div>
 
       {% endblock %}
 
@@ -210,7 +225,7 @@
           // Get the text of the option
           const skillName = selectedOptions[i].text;
 
-          console.log(skillName);
+          console.log(`skillName: ${skillName}`);
 
 
           $.ajax({
@@ -235,15 +250,22 @@
 
       {% endblock %}
 
-      <a id="editSkillsButton" class="btn btn-outline-success">Edit Skills</a>
+    
 
-      <br><br>
+      
 
+      <div class="my-interest-wrap" >
 
+      <h3>My Interest</h3>
 
-      <h4>My Interest</h4>
+      <div id='interest-display' style="border: 1px solid rgb(225, 231, 250);border-radius: 8px; width: 20rem; height: 9rem">{{user.interest}}</div>
 
-      <div id='interest-display'>{{user.interest}}</div><br>
+      <div class="edit-button" style="margin-top: 0.5rem; margin-left: 17rem;
+      ">
+        <a id="editInterestButton" class="btn btn-outline-info">Edit </a>
+      </div>
+
+    </div>
 
       {% block interest_modal %}
       <div class="modal" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
@@ -311,7 +333,7 @@
       </script>
       {% endblock %}
 
-      <a id="editInterestButton" class="btn btn-outline-success">Edit Interest</a>
+      
 
       <br><br>
 
@@ -320,14 +342,43 @@
   
     
     <div class="right-side-profile">
+      <div class="posts-wrap">
       
-      <h4>My Posts</h4>
+      <h3>My Posts</h3>
+
+        <div class="add-post-button" style="
+        border: 1px solid rgb(225, 231, 250);
+        border-radius: 8px;
+        width: inherit;
+        height: auto;
+        display: flex;
+        align-items: center;
+    ">
+
+  <button tabindex="0" id="addPost" style="width: 46px;height: 46px;border-radius: 8px;
+  position: relative;box-sizing: border-box;background: skyblue;border: skyblue;margin-left: 1rem;margin-top: 1rem;margin-bottom: 1rem;margin-right:1rem; float:left;">
+  <a href="/add_post">
+
+        <svg width="24" height="24" preserveAspectRatio="xMinYMin slice" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+          <path d="M12 5V19M5 12H19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><defs><linearGradient id="paint0_linear" x1="6.67606" y1="2.48437" x2="26.0418" y2="7.23253" gradientUnits="userSpaceOnUse"><stop stop-color="#0037EB"></stop><stop offset="0.87859" stop-color="#F895FF"></stop><stop offset="0.87869" stop-color="#F67AFF"></stop></linearGradient></defs></svg></a></button>
+
+          <div class="CTA" style="float:right; padding: 1rem;">
+          <strong>Add Post</strong><br><br>
+
+          Start talking about your next collaboration, service opportunity or showcase your skills, projects and more.
+        </div>
+
+          <!-- <a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a> -->
+          </div>
+          
+    
+      
       <br>
       {{user.posts}}
       <br>
-      <a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a>
-  
     </div>
+
+  </div>
 
   
   </div>
