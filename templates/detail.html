@@ -81,18 +81,18 @@
     <div class="card-body">
 
     <div class="title">
-        <h3 class="card-title">Title</h3>
+        <h3 class="card-title">{{ post.title }}</h3>
     </div>
 
     <div class="flex-container">
-        <div>Posted on: </div>
-        <div>Posted by: </div>
+        <div>Posted on: {{post.post_date.strftime('%m/%d/%Y, %H:%M')}}</div>
+        <div>Posted by: {{user.username}}</div>
     </div>
     
     <div class="divider"></div>
 
     <h4 class="card-title">Description</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <p class="card-text">{{post.description}}</p>
 
     <div class="divider2"></div>
 
@@ -101,7 +101,7 @@
         
         <div class="skills-container">
             <div class="one-skill-pill">
-                <span class="one-skill">Backend Development</span>
+                <span class="one-skill">How to access to post skills</span>
             </div>
 
             <div class="one-skill-pill">

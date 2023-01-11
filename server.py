@@ -258,13 +258,19 @@ def add_post():
         flash("Please enter all information.")
 
 
-@app.route('/detail')
-def show_detail():
-    """Show detail page of a post"""
+@app.route('/detail/<post_id>')
+def show_detail(post_id):
+    """Show detail page of a post
+    FROM THE COMMUNITY PAGE, THERE COULD BE A SAME POST_ID
+    FROM DIFFERENT USER
+    
+    """
 
     user = get_current_user()
+    post = crud.get_post_by_id(post_id)
+    all_posts = crud.get_all_posts()
     
-    return render_template('detail.html', user=user)
+    return render_template('detail.html', user=user,post=post)
 
 
 @app.route('/profile')

@@ -20,8 +20,13 @@ def create_post(title, post_date, description, user):
     
     post = Post(title=title, description=description, post_date=post_date, user_id=user.user_id)
 
-    
     return post
+
+def get_post_by_id(post_id):
+    """Return a post by post_id."""
+
+    return Post.query.get(post_id)
+
 
 def create_post_skill(post, skill):
 
@@ -76,7 +81,7 @@ def get_users():
 
     return User.query.all()
 
-def get_posts():
+def get_all_posts():
     """Return all posts"""
     
     return Post.query.all()
