@@ -23,7 +23,7 @@
   flex-direction: column;
 }
 
-#bio-display:hover, #interest-display:hover {
+#bio-display:hover, #interest-display:hover, #selected-skills-display:hover {
     background-color: #ebefff;
     cursor: pointer;
 }
@@ -182,7 +182,7 @@
 
       
 
-      <div class="my-interest-wrap" >
+      <div class="my-interest-wrap" style="padding-bottom: 2rem;">
 
       
 
@@ -267,20 +267,21 @@
       {% endblock %}
 
       
-      <div class="skill-wrap">
-        <h3>My Skills</h3>
+      <div class="skill-wrap" style="padding-bottom: 2rem;">
+        
   
-        <div id="selected-skills-display">
+        <div id="selected-skills-display" style="font-size: large;width: 320px;min-height: 5rem;height: auto;border-radius: 16px;padding-top: 1rem;padding-bottom: 1rem;padding-right: 2rem; padding-left: 1rem;">
+          <div class="bio-display-title"><h3 style="margin-top: 0;">My Skills</h3></div>
           {% for skill in user.skills %}
             <button class="pills">{{ skill.skill }}</button>
           {% endfor %}
-          <!-- <p>{{all_userSkill}}</p> -->
+          
         </div>
   
-        <div class="edit-button" style="margin-top: 0.5rem; margin-left: 17rem;
+        <!-- <div class="edit-button" style="margin-top: 0.5rem; margin-left: 17rem;
         ">
         <a id="editSkillsButton" class="btn btn-outline-info">Edit</a>
-        </div>
+        </div> -->
   
         <div id="skills-display"></div>
   
@@ -329,7 +330,7 @@
   
         <script>
           $(document).ready(function(){
-              $("#editSkillsButton").click(function(e){
+              $("#selected-skills-display").click(function(e){
                   $("#skillsModal").modal("show");
                   e.preventDefault();
               });
@@ -395,15 +396,19 @@
         display: flex;
         align-items: center;
     ">
-
-  <button tabindex="0" id="addPost" style="width: 46px;height: 46px;border-radius: 8px;
+   <div class="add-post-btn">
+    <a href="/add_post">
+  <button tabindex="0" id="addPost" style="width: 60px;height: 60px;border-radius: 8px;
   position: relative;box-sizing: border-box;background: #0dcaf0;border: #0dcaf0;margin-left: 1rem;margin-top: 1rem;margin-bottom: 1rem;margin-right:1rem; float:left;">
-  <a href="/add_post">
+  <svg width="24" height="24" preserveAspectRatio="xMinYMin slice" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
+          <path d="M12 5V19M5 12H19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          </button>
+    </a>
+  </div>
 
-        <svg width="24" height="24" preserveAspectRatio="xMinYMin slice" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="">
-          <path d="M12 5V19M5 12H19" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><defs><linearGradient id="paint0_linear" x1="6.67606" y1="2.48437" x2="26.0418" y2="7.23253" gradientUnits="userSpaceOnUse"><stop stop-color="#0037EB"></stop><stop offset="0.87859" stop-color="#F895FF"></stop><stop offset="0.87869" stop-color="#F67AFF"></stop></linearGradient></defs></svg></a></button>
 
-          <div class="CTA" style="float:right; padding: 1rem;">
+          <div class="CTA" style="float:right; padding: 1rem; font-size:large">
           <strong>Add Post</strong><br><br>
 
           Start talking about your next collaboration, service opportunity or showcase your skills, projects and more.
