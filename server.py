@@ -298,7 +298,7 @@ def show_community():
     username = session.get("username")
     user = crud.get_user_by_username(username)
 
-    posts = crud.get_posts()
+    posts = crud.get_all_posts()
 
 
     return render_template('community.html', user=user, posts=posts)
