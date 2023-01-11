@@ -58,6 +58,20 @@
   bottom: 0;
 }
 
+.username-div p, .description-div p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.title-div {
+    width: 99%; /* or any specific width*/
+    word-wrap: break-word;
+}
+
+
+
+
 </style>
 
 <div class="overall-profile">
@@ -395,7 +409,7 @@
             <div class="row">
               {% for post in user.posts %}
               <div class="col-4">
-                <div class="post-card" style="border: 1px solid rgb(225, 231, 250);border-radius: 16px;width: 19rem;height: 25rem;margin-bottom: 2rem;box-shadow: 0 4px 8px 0 rgb(0 0 0 / 3%), 0 6px 20px 0 rgb(0 0 0 / 5%);">
+                <div class="post-card" style="border: 1px solid rgb(225, 231, 250);border-radius: 16px;width: 20rem;height: 25rem;margin-bottom: 2rem;box-shadow: 0 4px 8px 0 rgb(0 0 0 / 3%), 0 6px 20px 0 rgb(0 0 0 / 5%);">
                   <a href="/detail/{{post.post_id}}" style="color: black;text-decoration: none;
               ">
                   <div class="post-image-div">
@@ -407,9 +421,15 @@
                       <p>{{post.post_date.strftime('%m/%d/%Y, %H:%M')}}</p>
                     </div>
                     <div class="title-div">
-                      <p style="font-size: 24px;font-weight: bold;">{{ post.title }}</p>
+                      <p style="font-size: 22px;font-weight: bold;">{{ post.title }}</p>
                     </div>
-                    <div class="description-div">
+                    <div class="description-div" style="
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+                ">
                       <p>{{post.description}}</p>
                     </div>
                     <div class="username-div">

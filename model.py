@@ -76,7 +76,7 @@ class Post(db.Model):
     post_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    title = db.Column(db.String)
+    title = db.Column(db.String(60))
     post_date = db.Column(db.DateTime)
     description = db.Column(db.String)
 

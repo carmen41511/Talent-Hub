@@ -253,7 +253,8 @@ def add_post():
     if title and skill_set and description:
         # db.session.add(post)
         # db.session.commit()
-        return redirect('/detail')
+        # post_id = post.post_id
+        return redirect(f'/detail/{post.post_id}')
     else:
         flash("Please enter all information.")
 
