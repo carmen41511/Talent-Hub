@@ -30,7 +30,7 @@
     <div class="container py-3">
       
         <div class="user-title">
-            <h2 style="font-weight: 800; line-height: 2rem;">{{user.username}}, connect through Talent Hub with like-minded students</h2>
+            <h2 style="font-weight: 800; ">{{user.username}}, connect through Talent Hub with like-minded students</h2>
             <h5>Discover talents or offer your skills</h5>
     
         </div>
@@ -50,6 +50,20 @@
       <div id="polymorphism"></div>
     </div>
         
+    
+    <div class="container">
+      <div class="row">
+        {% for post in user.posts %}
+        <div class="col-4" style="padding: 1rem;">
+          <div class="post-card" style="padding:1rem;padding:1rem;border: 1px solid rgb(225, 231, 250);border-radius: 8px;width: 15rem;height: 20rem;display: flex;">
+          {{ post.title }}
+        </div>
+      </div>
+        {% endfor %}  
+
+      </div>
+    </div>
+
     
       <!-- <main>
         <div class="row row-cols-1 row-cols-md-3 mb-3 text-center" style="margin-top: 3rem;">

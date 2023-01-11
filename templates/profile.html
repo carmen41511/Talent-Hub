@@ -13,6 +13,9 @@
 .overall-profile-inner {
   display: flex;
   flex-direction: row;
+  padding-right: calc(var(--bs-gutter-x) * .5);
+  padding-left: calc(var(--bs-gutter-x) * .5);
+  padding-top: 40px;
 }
 
 .right-side-profile {
@@ -29,7 +32,7 @@
 }
 
 .pills {
-  background-color: #ddd;
+  background-color: rgb(225, 231, 250);
   border: none;
   color: black;
   padding: 10px 20px;
@@ -41,15 +44,29 @@
   border-radius: 16px;
 }
 
+.container {
+  padding-right: 0%;
+  padding-left: 0%;
+}
+
+.post-card{
+  position:relative;
+}
+
+.username-div{
+  position: absolute;
+  bottom: 0;
+}
+
 </style>
 
 <div class="overall-profile">
-  <div class="overall-profile-inner" style="max-width: 1280px; padding: 40px 80px;">
+  <div class="overall-profile-inner" style="max-width: 1280px;">
 
     <div class="left-side-profile" style="max-width: 413px; min-width: 413px;">
-      <img src="https://github.com/mdo.png" alt="mdo" width="92" height="92" class="rounded-circle">
+      <img src="https://github.com/mdo.png" alt="mdo" width="300px" height="300px" style="border-radius: 16px;" >
       
-      <h1>{{user.username}} </h1>
+      <h1 style="margin:0">{{user.username}} </h1>
       
 
       <!-- make the about me section into a card component -->
@@ -140,7 +157,6 @@
       
     </div>
 
-      
 
       <div class="skill-wrap">
       <h3>My Skills</h3>
@@ -346,7 +362,7 @@
       
       <h3>My Posts</h3>
 
-        <div class="add-post-button" style="
+        <div class="add-post-wrap" style="
         border: 1px solid rgb(225, 231, 250);
         border-radius: 8px;
         width: inherit;
@@ -370,12 +386,37 @@
 
           <!-- <a href="/add_post" class="btn btn-primary" id="addPost">Add Post</a> -->
           </div>
-          
+
+      <br>
+      <!-- {{user.posts}} -->
+      <br>
+
+          <div class="container">
+            <div class="row">
+              {% for post in user.posts %}
+              <div class="col-4">
+                <div class="post-card" style="padding:1rem;padding:1rem;border: 1px solid rgb(225, 231, 250);border-radius: 8px;width: 15rem;height: 20rem; margin-bottom:1rem;">
+                  <img src="https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" style="
+                  object-fit: cover;
+                  width: 15rem;
+                  height: 7rem;
+              ">
+                  <div class="datetime-div">
+                    <p>{{post.post_date.strftime('%Y-%m-%d %H:%M')}}</p></div>
+                  <div class="title-div">
+                    <p style="font-size:20px;">{{ post.title }}</p></div>
+                  <div class="description-div">
+                    <p>{{post.description}}</p></div><br>
+                  <div class="username-div">
+                  <p>by {{user.username}} </p></div>
+              </div>
+            </div>
+              {% endfor %}  
+
+            </div>
+          </div>
+
     
-      
-      <br>
-      {{user.posts}}
-      <br>
     </div>
 
   </div>
