@@ -300,8 +300,15 @@ def show_community():
 
     posts = crud.get_all_posts()
 
-
     return render_template('community.html', user=user, posts=posts)
+
+@app.route('/logout')
+def logout():
+    """Log out user"""
+
+    del session["username"]
+    flash("Logged out.")
+    return redirect('/')
 
 
 if __name__ == "__main__":
