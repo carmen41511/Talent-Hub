@@ -34,7 +34,7 @@ def homepage():
 def all_users():
     """View all users."""
 
-    users = crud.get_users()
+    users = crud.get_all_users()
 
     return render_template("all_users.html", users=users)
 
@@ -94,30 +94,6 @@ def edit_skills():
 
 
     return redirect('/profile')
-    # return jsonify({'user_skill_ls': user_skill_ls})
-    # user.skills = updated_skills
-    # print(user.skills)
-    # db.session.commit()
-
-    # return jsonify({'skills': updated_skills})
-
-# @app.route('/edit-skills')
-# def get_skills():
-#   # Get the currently logged-in user
-#   username = session.get("username")
-#   user = crud.get_user_by_username(username)
-#   print(user)
-
-#   skill_set = request.form.getlist('skills')
-  
-#   print(f'skill_set; {skill_set}')
-#   # Get the skills for the user
-#   user_skills = user.skills
-#   skills = [skill.skill for skill in user_skills]
-#   print(f'skills: {skills}')
-  
-#   # Return the skills as a JSON object
-#   return jsonify({'skills': skills})
 
 
 @app.route('/edit-interest', methods=['POST'])
@@ -297,10 +273,11 @@ def show_community():
 
     username = session.get("username")
     user = crud.get_user_by_username(username)
+    all_users = crud.get_all_users()
 
     posts = crud.get_all_posts()
 
-    return render_template('community.html', user=user, posts=posts)
+    return render_template('community.html', user=user, all_users=all_users,posts=posts)
 
 @app.route('/logout')
 def logout():

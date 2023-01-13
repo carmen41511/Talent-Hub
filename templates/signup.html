@@ -2,49 +2,59 @@
 
 {% block body %}
 
-<form action="/signup" method="POST">
-    
-    <h1>Create an Account</h1>
+<div class="signup-container" style="margin-top: 5rem;">
+    <form action="/signup" method="POST">
+        <div class="card" style="max-width: 40%;max-height: fit-content; margin:auto;">
+            <div class="card-body" style="
+            padding: 24px 24px 32px 24px;
+            z-index: 1000;
+            position: relative;
+            border-radius: 16px;
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 8px 0 rgb(0 0 0 / 3%), 0 6px 20px 0 rgb(0 0 0 / 5%);">
+           
+           <h4 style="margin-bottom: 0; "><strong>Create an Account</strong></h4>
 
     <div>
-        <label for="email">Email:</label>
-        <input type="text" name="email" required>
+        <label for="email" style="padding-bottom: 0.5rem;"></label>
+        <input type="text" class="border-1" name="email" placeholder=" Email Address*"style="width: 100%; height:3rem; border-radius: 8px;" required>
     </div>
 
-    <br><br>
+    
 
     <div>
-        <label for="username">Create a Username:</label>
-        <input type="text" name="username" required>
+        <label for="username" style="padding-bottom: 0.5rem;"></label>
+        <input type="text" name="username" class="border-1" name="username" placeholder=" Choose a Username*"style="width: 100%; height:3rem; border-radius: 8px;" required>
     </div>
 
-    <br><br>
+    
     
     <div>
-        <label for="password">Choose a Password:</label>
-        <input type="password" name="password" required>
+        <label for="password" style="padding-bottom: 0.5rem;"></label>
+        <input type="password" class="border-1" name="password" placeholder=" Password*" style="width: 100%; height:3rem; border-radius: 8px;" required>
     </div>
 
     <br>
 
     <div>
-        <p><label for="interest">What's Your Interest?</label></p>
-        <textarea name="interest" rows="5" cols="50" placeholder="A place to make yourself shine and look for like-minded peers" required></textarea>
+        <label for="interest" style="padding-bottom: 0.5rem;">What's Your Interest?*</label>
+        <textarea name="interest" rows="5" cols="50" placeholder=" Make yourself shine and attract other talents." style="width: 100%;border-radius: 8px;" required></textarea>
     </div>
 
     <br>
 
     <div>
-        <p><label for="bio">About Me</label></p>
-        <textarea name="bio" rows="5" cols="50" placeholder="Write something about yourself. What are you looking for? Why are you here?" required></textarea>
+        <label for="bio" style="padding-bottom: 0.5rem;">Tell Us About Yourself*</label>
+        <textarea name="bio" rows="5" cols="50" placeholder=" Write something about yourself. What are you looking for? Why are you here?" style="width: 100%;border-radius: 8px;" required></textarea>
     </div>
 
     <br><br>
 
 
 
-    <button type="submit">Sign Up</button>
-
+    <button type="submit" class="btn btn-primary" style="border-radius: 8px;width: 100%;">Create Account</button>
+</div>
+</div>
 </form>
 
 

@@ -23,7 +23,7 @@
 
 
 
-<body class="vsc-initialized" data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
+<body class="vsc-initialized" data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="" style="background: aliceblue;">
     
     
 
@@ -34,31 +34,18 @@
             <h5>Discover talents or offer your skills</h5>
     
         </div>
-
-    <div class="grid" id="all-cards">
-      <!-- Mount Balloonicorn's card on to this element. -->
-      <div id="balloonicorn"></div>
-    
-      <!-- Mount Float's card on to this element. -->
-      <div id="float"></div>
-    
-      <!-- Mount Llambda's card on to this element. -->
-      <div id="llambda"></div>
-    
-      <div id="merge"></div>
-    
-      <div id="polymorphism"></div>
-    </div>
-        
     
     <div class="container">
       <div class="row">
-        {% for post in user.posts %}
+        {% for user in all_users %}
+          {% for post in user.posts %}
+
         <div class="col-4" style="padding: 1rem;">
           <div class="post-card" style="padding:1rem;padding:1rem;border: 1px solid rgb(225, 231, 250);border-radius: 8px;width: 15rem;height: 20rem;display: flex;">
           {{ post.title }}
         </div>
       </div>
+        {% endfor %}  
         {% endfor %}  
 
       </div>
