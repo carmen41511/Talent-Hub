@@ -12,7 +12,6 @@ app.jinja_env.undefined = StrictUndefined
 
 def get_current_user():
     username = session.get("username")
-
     if username:
         user = crud.get_user_by_username(username)  
         return user
@@ -23,9 +22,7 @@ def get_current_user():
 @app.route('/')
 def homepage():
     """View homepage."""
-
     user = get_current_user()
-
     return render_template('homepage.html', user=user)
 
     
@@ -33,18 +30,14 @@ def homepage():
 @app.route("/users")
 def all_users():
     """View all users."""
-
     users = crud.get_all_users()
-
     return render_template("all_users.html", users=users)
 
 
 @app.route("/users/<user_id>")
 def show_user(user_id):
     """Show details on a particular user."""
-
     user = crud.get_user_by_id(user_id)
-
     return render_template("user_details.html", user=user)
 
 
@@ -52,8 +45,6 @@ def show_user(user_id):
 def edit_bio():
     # Get the updated bio from the request
     updated_bio = request.form['bio']
-    # updated_bio = request.get_json('bio')
-
     username = session.get("username")
     user = crud.get_user_by_username(username)
 
@@ -67,15 +58,10 @@ def edit_bio():
 
 @app.route('/edit-skills', methods=['POST'])
 def edit_skills():
-
-    # print(request.form)
     skill_set = request.form.getlist('skills')
-    # updated_skills_ls = json.loads(updated_skills)
     print(f"updated_skills: {skill_set}")
-
     username = session.get("username")
     user = crud.get_user_by_username(username)
-
     crud.delete_all_user_skills(user)
 
     for skill_id in skill_set:
@@ -91,7 +77,6 @@ def edit_skills():
 
         print(f'user_skill: {user_skill}')
         print(f'user.skills: {user.skills}')
-
 
     return redirect('/profile')
 
@@ -110,19 +95,15 @@ def edit_interest():
 @app.route('/login', methods=['GET'])
 def show_login():
     """Show Login Page"""
-
     user = get_current_user()
-
     return render_template("login.html", user=user)
 
 
 @app.route('/login', methods=['POST'])
 def handle_login():
     """Log in user"""
-
     username = request.form.get('username')
     password = request.form.get('password')
-
     user = crud.get_user_by_username(username)
 
     if not user or user.password != password:
@@ -133,23 +114,19 @@ def handle_login():
         session["username"] = user.username
         flash(f"Welcome back, {user.username}")
         
-    # may change redirect route to community page later
     return redirect('/profile')
 
 
 @app.route('/signup', methods=['GET'])
 def show_signup():
     """Show Sign Up Page"""
-
     user = get_current_user()
-
     return render_template("signup.html", user=user)
 
 
 @app.route('/signup', methods=['POST'])
 def handle_signup():
     """Sign Up User"""
-
     username = request.form.get('username')
     password = request.form.get('password')
     email = request.form.get('email')
@@ -158,7 +135,6 @@ def handle_signup():
 
     # check if a user with the username from request.form already exists.
     user = crud.get_user_by_username(username)
-    # print(f"user: {user}")
 
     if user:
         flash("Username already exist. Please try again.")
@@ -175,11 +151,8 @@ def handle_signup():
 @app.route('/add_post', methods=["GET"])
 def show_add_post():
     """Show add post page"""
-
     username = session.get("username")
     user = crud.get_user_by_username(username)
-
-
     return render_template('add_post.html', user=user)
 
 
@@ -189,26 +162,20 @@ def add_post():
         Maybe look up the user based on who's currently creating the form
        Need to store the post information to the user account
     """
-
     title = request.form.get("title")
     print(f'title: {title}')
 
     skill_set = request.form.getlist('skills')
     print(f'skill_set: {skill_set}')
-    # skill_set: ['b2b','3d']
 
     description = request.form.get("description")
-    # print(f'description: {description}')
 
     post_date = datetime.now()
-    # print(f'post_date: {post_date}')
-
+    
     username = session.get("username")
     user = crud.get_user_by_username(username)
-    # print(f'user: {user}')
 
     post = crud.create_post(title, post_date, description, user)
-    # post_id
     db.session.add(post)
     db.session.commit()
     print(f'post: {post}')
@@ -227,9 +194,6 @@ def add_post():
         
     # if post:
     if title and skill_set and description:
-        # db.session.add(post)
-        # db.session.commit()
-        # post_id = post.post_id
         return redirect(f'/detail/{post.post_id}')
     else:
         flash("Please enter all information.")
@@ -240,9 +204,7 @@ def show_detail(post_id):
     """Show detail page of a post
     FROM THE COMMUNITY PAGE, THERE COULD BE A SAME POST_ID
     FROM DIFFERENT USER
-    
     """
-
     user = get_current_user()
     post = crud.get_post_by_id(post_id)
     all_posts = crud.get_all_posts()
@@ -253,28 +215,20 @@ def show_detail(post_id):
 @app.route('/profile')
 def show_profile():
     """View user profile page."""
-
     all_skills = crud.return_skills()
-
     username = session.get("username")
     user = crud.get_user_by_username(username)
-
     all_userSkill = crud.get_all_user_skills(user)
-    # print(f'all_userSkill: {all_userSkill}')
-    # print(f'show_profile() user: {user}')
-    # print(f'show_profile() user.skills: {user.skills}')
-
+    
     return render_template('profile.html', user=user, all_skills=all_skills, all_userSkill=all_userSkill)
 
 
 @app.route('/community')
 def show_community():
     """View community page with all posts"""
-
     username = session.get("username")
     user = crud.get_user_by_username(username)
     all_users = crud.get_all_users()
-
     posts = crud.get_all_posts()
 
     return render_template('community.html', user=user, all_users=all_users,posts=posts)
